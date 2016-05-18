@@ -2,9 +2,33 @@ from cornice.service import Service
 from pyramid.config import Configurator
 from pyramid.events import NewRequest
 
+random_settings = Service('random_settings', path='/random_settings')
 behavior = Service('behavior', path='/behavior')
 behaviors = Service('behaviors', path='/behaviors')
 
+
+@random_settings.put()
+def set_random_settings(request):
+    try:
+        data = request.json
+        name = data['settings']
+    except ValueError:
+        request.errors.add('body', '',
+                           'the value is not a valid json object')
+    except KeyError:
+        request.errors.add('body', '',
+                           'the value should contain a "settings" key')
+    else:
+        try:
+            request.proxy.set_random_settings(**data)
+        except KeyError:
+            request.errors.add('body', 'settings',
+                               "the '%s' behavior does not exist" % name)
+    return {'status': 'ok'}
+
+@random_settings.get()
+def get_random_settings(request):
+    return {'settings': request.proxy.settings.getsection('vaurien')['behavior']}
 
 @behavior.put()
 def set_behavior(request):

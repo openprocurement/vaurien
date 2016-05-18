@@ -224,7 +224,12 @@ class RandomProxy(DefaultProxy):
         return random.choice(self.choices)
 
 
-class OnTheFlyProxy(DefaultProxy):
+class OnTheFlyProxy(RandomProxy):
+
+    def set_random_settings(self, **options):
+        self.settings['vaurien.behavior'] = options['settings']
+        self.choices = []
+        self.initialize_choices()
 
     def set_behavior(self, **options):
         behavior_name = options.pop('name')
