@@ -79,6 +79,9 @@ Behavior.register(Dummy)
 from vaurien.behaviors.error import Error
 Behavior.register(Error)
 
+from vaurien.behaviors.dummy_error import DummyError
+Behavior.register(DummyError)
+
 from vaurien.behaviors.blackout import Blackout
 Behavior.register(Blackout)
 
